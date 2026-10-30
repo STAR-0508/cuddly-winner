@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/Lunar.js"></script>
 </head>
 <body>
   <!-- 背景装饰 -->
@@ -41,6 +42,61 @@
         <div class="goal-actions" id="goalActions" style="display:none;">
           <input type="text" id="goalInput" class="input" placeholder="输入今日目标..." />
           <button class="btn btn-primary" id="goalSaveBtn">保存</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 每日信息 -->
+    <section class="card daily-card">
+      <div class="card-header">
+        <span class="icon">📰</span>
+        <h2>每日信息</h2>
+        <span class="badge" id="dailyStatus">加载中...</span>
+      </div>
+      <div class="daily-grid">
+        <!-- 天气 -->
+        <div class="daily-item weather-box">
+          <div class="di-header">
+            <span class="di-icon">🌤️</span>
+            <span class="di-title">天气</span>
+          </div>
+          <div class="di-body" id="weatherBox">
+            <div class="di-loading">获取中...</div>
+          </div>
+        </div>
+
+        <!-- 农历 -->
+        <div class="daily-item lunar-box">
+          <div class="di-header">
+            <span class="di-icon">🌙</span>
+            <span class="di-title">农历</span>
+          </div>
+          <div class="di-body" id="lunarBox">
+            <div class="di-loading">计算中...</div>
+          </div>
+        </div>
+
+        <!-- 历史上的今天 -->
+        <div class="daily-item history-box">
+          <div class="di-header">
+            <span class="di-icon">🏛️</span>
+            <span class="di-title">历史上的今天</span>
+          </div>
+          <div class="di-body" id="historyBox">
+            <div class="di-loading">加载中...</div>
+          </div>
+        </div>
+
+        <!-- 每日一言 -->
+        <div class="daily-item hitokoto-box">
+          <div class="di-header">
+            <span class="di-icon">💬</span>
+            <span class="di-title">每日一言</span>
+            <button class="btn-icon" id="hitokotoRefresh" title="换一句">🔄</button>
+          </div>
+          <div class="di-body" id="hitokotoBox">
+            <div class="di-loading">获取中...</div>
+          </div>
         </div>
       </div>
     </section>

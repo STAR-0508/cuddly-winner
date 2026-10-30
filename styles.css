@@ -285,6 +285,191 @@ body {
   flex: 1;
 }
 
+/* ===== 每日信息 ===== */
+.daily-card {
+  margin-bottom: 24px;
+  border-left: 4px solid var(--success);
+}
+
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.daily-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  transition: background 0.2s ease;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+}
+
+.daily-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.di-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.di-icon {
+  font-size: 1rem;
+}
+
+.di-title {
+  font-weight: 500;
+  flex: 1;
+}
+
+.di-body {
+  flex: 1;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+.di-loading {
+  color: var(--text-muted);
+  font-style: italic;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 天气 */
+.weather-temp {
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--gradient-1);
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.weather-desc {
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.weather-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.weather-loc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* 农历 */
+.lunar-main {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.lunar-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.lunar-festival {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: var(--accent);
+  background: rgba(253, 121, 168, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.lunar-solar-term {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--success);
+  background: rgba(0, 206, 201, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* 历史 */
+.history-list {
+  list-style: none;
+  padding: 0;
+}
+
+.history-list li {
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 0.8rem;
+}
+
+.history-list li:last-child {
+  border-bottom: none;
+}
+
+.history-year {
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 4px;
+  font-size: 0.75rem;
+}
+
+.history-text {
+  color: var(--text);
+}
+
+/* 每日一言 */
+.hitokoto-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.hitokoto-from {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  text-align: right;
+}
+
+.di-error {
+  color: var(--danger);
+  font-size: 0.75rem;
+}
+
+/* 每日信息响应式 */
+@media (max-width: 1000px) {
+  .daily-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .daily-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== 网格布局 ===== */
 .grid {
   display: grid;
