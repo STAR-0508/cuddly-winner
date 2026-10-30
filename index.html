@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的工作台</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- 背景装饰 -->
+  <div class="bg-decoration">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <main class="container">
+    <!-- 顶部问候区 -->
+    <header class="hero">
+      <div class="hero-left">
+        <h1 class="greeting" id="greeting">你好 👋</h1>
+        <p class="date" id="date"></p>
+      </div>
+      <div class="hero-right">
+        <div class="clock" id="clock">00:00</div>
+        <div class="seconds" id="seconds">00</div>
+      </div>
+    </header>
+
+    <!-- 今日目标 -->
+    <section class="card goal-card">
+      <div class="card-header">
+        <span class="icon">🎯</span>
+        <h2>今日目标</h2>
+        <button class="btn-icon" id="goalEditBtn" title="编辑">✏️</button>
+      </div>
+      <div class="goal-content" id="goalContent">
+        <p class="goal-text" id="goalText">今天也要元气满满！</p>
+        <div class="goal-actions" id="goalActions" style="display:none;">
+          <input type="text" id="goalInput" class="input" placeholder="输入今日目标..." />
+          <button class="btn btn-primary" id="goalSaveBtn">保存</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 主内容区 -->
+    <div class="grid">
+      <!-- 待办事项 -->
+      <section class="card todos-card">
+        <div class="card-header">
+          <span class="icon">✅</span>
+          <h2>待办事项</h2>
+          <span class="badge" id="todoCount">0</span>
+        </div>
+        <div class="todo-input-row">
+          <input type="text" id="todoInput" class="input" placeholder="添加新任务..." />
+          <select id="todoPriority" class="select">
+            <option value="normal">普通</option>
+            <option value="high">重要</option>
+            <option value="low">轻松</option>
+          </select>
+          <button class="btn btn-primary" id="todoAddBtn">添加</button>
+        </div>
+        <ul class="todo-list" id="todoList"></ul>
+      </section>
+
+      <!-- 番茄钟 -->
+      <section class="card pomodoro-card">
+        <div class="card-header">
+          <span class="icon">🍅</span>
+          <h2>番茄钟</h2>
+        </div>
+        <div class="pomodoro">
+          <div class="timer-circle">
+            <svg viewBox="0 0 120 120">
+              <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+              <circle class="progress-bar" cx="60" cy="60" r="54" id="progressBar"></circle>
+            </svg>
+            <div class="timer-text" id="timerText">25:00</div>
+          </div>
+          <div class="pomodoro-controls">
+            <button class="btn btn-primary" id="pomoStartBtn">开始</button>
+            <button class="btn btn-secondary" id="pomoResetBtn">重置</button>
+          </div>
+          <div class="pomodoro-modes">
+            <button class="mode-btn active" data-mode="work">专注 25min</button>
+            <button class="mode-btn" data-mode="short">短休 5min</button>
+            <button class="mode-btn" data-mode="long">长休 15min</button>
+          </div>
+          <div class="pomo-stats">
+            <span>今日完成: <strong id="pomoCount">0</strong> 🍅</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 快速笔记 -->
+      <section class="card notes-card">
+        <div class="card-header">
+          <span class="icon">📝</span>
+          <h2>快速笔记</h2>
+          <button class="btn-icon" id="noteClearBtn" title="清空">🗑️</button>
+        </div>
+        <textarea id="noteArea" class="textarea" placeholder="随手记录点什么..."></textarea>
+        <div class="note-footer">
+          <span id="noteSaved">已自动保存</span>
+        </div>
+      </section>
+
+      <!-- 书签 -->
+      <section class="card bookmarks-card">
+        <div class="card-header">
+          <span class="icon">🔖</span>
+          <h2>常用书签</h2>
+          <button class="btn-icon" id="bookmarkAddBtn" title="添加">➕</button>
+        </div>
+        <div class="bookmark-form" id="bookmarkForm" style="display:none;">
+          <input type="text" id="bookmarkName" class="input" placeholder="名称" />
+          <input type="url" id="bookmarkUrl" class="input" placeholder="https://..." />
+          <div class="bm-form-btns">
+            <button class="btn btn-primary" id="bookmarkSaveBtn">保存</button>
+            <button class="btn btn-secondary" id="bookmarkCancelBtn">取消</button>
+          </div>
+        </div>
+        <div class="bookmark-grid" id="bookmarkGrid"></div>
+      </section>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+      <span id="quote"></span>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
