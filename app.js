@@ -978,60 +978,81 @@ async function fetchHitokoto() {
   }
 }
 
-// 主调度：每天首次打开自动拉取
-async function initDaily() {
-  const today = new Date().toDateString();
-  const cachedDate = localStorage.getItem(STORAGE_KEYS_EXTRA.DAILY_DATE);
-  const cachedInfo = load(STORAGE_KEYS_EXTRA.DAILY_INFO, null);
+// ===== 主调度：服务端 8:00 数据 > 当日缓存 > 实时拉取 =====
+let dailyInfo = null;
 
-  // 检查是否今天已经拉取过
-  if (cachedDate === today && cachedInfo) {
-    // 直接用缓存渲染（除了 hitokoto 支持手动刷新）
-    renderWeather(cachedInfo.weather);
-    renderLunar(cachedInfo.lunar);
-    renderHistory(); // 历史是静态数据
-    renderHitokoto(cachedInfo.hitokoto);
-    $('dailyStatus').textContent = '今日已缓存 ✓';
-    $('dailyStatus').style.background = 'rgba(0, 206, 201, 0.2)';
-    $('dailyStatus').style.color = 'var(--success)';
+function localDateStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// 读取服务端每天 8:00 生成的数据
+async function loadServerDaily() {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 5000);
+    const resp = await fetch(`daily.json?t=${Date.now()}`, { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.date === localDateStr() ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+function applyDaily(info, statusText) {
+  dailyInfo = info;
+  renderWeather(info.weather);
+  renderLunar(info.lunar || computeLunar());
+  renderHistory();
+  renderHitokoto(info.hitokoto);
+  $('dailyStatus').textContent = statusText;
+  $('dailyStatus').style.background = 'rgba(0, 206, 201, 0.2)';
+  $('dailyStatus').style.color = 'var(--success)';
+}
+
+async function refreshHitokoto() {
+  $('hitokotoBox').innerHTML = `<div class="di-loading">换一句...</div>`;
+  const data = await fetchHitokoto();
+  renderHitokoto(data);
+  if (dailyInfo && data.hitokoto) {
+    dailyInfo.hitokoto = data;
+    save(STORAGE_KEYS_EXTRA.DAILY_INFO, dailyInfo);
+  }
+}
+
+async function initDaily() {
+  $('hitokotoRefresh').addEventListener('click', refreshHitokoto);
+
+  // 1. 优先使用服务端每天 8:00 自动抓取的数据
+  const serverData = await loadServerDaily();
+  if (serverData) {
+    const info = { weather: serverData.weather, hitokoto: serverData.hitokoto, lunar: computeLunar() };
+    save(STORAGE_KEYS_EXTRA.DAILY_INFO, info);
+    localStorage.setItem(STORAGE_KEYS_EXTRA.DAILY_DATE, new Date().toDateString());
+    applyDaily(info, '8点数据 ✓');
     return;
   }
 
-  // 重新拉取
-  $('dailyStatus').textContent = '获取中...';
+  // 2. 当天已有缓存则直接使用
+  const today = new Date().toDateString();
+  const cachedInfo = load(STORAGE_KEYS_EXTRA.DAILY_INFO, null);
+  if (localStorage.getItem(STORAGE_KEYS_EXTRA.DAILY_DATE) === today && cachedInfo) {
+    applyDaily(cachedInfo, '今日已缓存 ✓');
+    return;
+  }
 
-  // 并行拉取
+  // 3. 兜底：浏览器直接实时拉取
+  $('dailyStatus').textContent = '获取中...';
   const [weather, hitokoto] = await Promise.all([
     fetchWeather().catch(() => ({ error: '网络错误' })),
     fetchHitokoto().catch(() => ({ error: '网络错误' })),
   ]);
-
-  const lunar = computeLunar();
-
-  // 渲染
-  renderWeather(weather);
-  renderLunar(lunar);
-  renderHistory();
-  renderHitokoto(hitokoto);
-
-  // 缓存（hitokoto 单独可刷新，这里存当天的）
-  const info = { weather, hitokoto, lunar };
+  const info = { weather, hitokoto, lunar: computeLunar() };
   save(STORAGE_KEYS_EXTRA.DAILY_INFO, info);
   localStorage.setItem(STORAGE_KEYS_EXTRA.DAILY_DATE, today);
-
-  $('dailyStatus').textContent = '今日已缓存 ✓';
-  $('dailyStatus').style.background = 'rgba(0, 206, 201, 0.2)';
-  $('dailyStatus').style.color = 'var(--success)';
-
-  // hitokoto 刷新按钮
-  $('hitokotoRefresh').addEventListener('click', async () => {
-    $('hitokotoBox').innerHTML = `<div class="di-loading">换一句...</div>`;
-    const newData = await fetchHitokoto();
-    renderHitokoto(newData);
-    // 更新缓存
-    info.hitokoto = newData;
-    save(STORAGE_KEYS_EXTRA.DAILY_INFO, info);
-  });
+  applyDaily(info, '今日已缓存 ✓');
 }
 
 // ===== 启动 =====
